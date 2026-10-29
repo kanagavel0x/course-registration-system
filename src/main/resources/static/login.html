@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – Course Registration System</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --focus-ring: #93c5fd;
+      --error-bg: #fef2f2;
+      --error-text: #991b1b;
+      --error-border: #fecaca;
+      --success-bg: #ecfdf5;
+      --success-text: #065f46;
+      --success-border: #a7f3d0;
+      --radius: 10px;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.05);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+                   Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+    }
+
+    .logo { text-align: center; margin-bottom: 1.75rem; }
+
+    .logo-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      background: var(--primary);
+      border-radius: 12px;
+      margin-bottom: 0.85rem;
+    }
+
+    .logo-icon svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .logo h1 { font-size: 1.4rem; font-weight: 700; color: var(--text); }
+    .logo p  { font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    .alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      line-height: 1.45;
+      border: 1px solid transparent;
+      margin-bottom: 1.25rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .alert-error   { background: var(--error-bg);   color: var(--error-text);   border-color: var(--error-border); }
+    .alert-success { background: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
+    .alert svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    .form-group { margin-bottom: 1.15rem; }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+      width: 100%;
+      min-height: 46px;
+      padding: 0.7rem 1rem;
+      font-size: 0.95rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+    input:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--focus-ring); }
+
+    .input-wrapper { position: relative; }
+
+    .toggle-pw {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-pw:hover { color: var(--text); }
+    .toggle-pw svg { width: 18px; height: 18px; }
+    input[type="password"] { padding-right: 2.75rem; }
+
+    .btn-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 48px;
+      margin-top: 0.5rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s ease, transform .05s ease;
+    }
+
+    .btn-submit:hover  { background: var(--primary-hover); }
+    .btn-submit:active { transform: scale(0.99); }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+    .footer-links { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+    .footer-links a { color: var(--primary); text-decoration: none; font-weight: 500; }
+    .footer-links a:hover { text-decoration: underline; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body>
+
+<main class="card">
+
+  <div class="logo">
+    <div class="logo-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+        <path d="M6 12v5c3.333 1.333 8.667 1.333 12 0v-5"/>
+      </svg>
+    </div>
+    <h1>Course Registration</h1>
+    <p>Sign in to access your portal</p>
+  </div>
+
+  <div id="errorAlert" class="alert alert-error" style="display:none" role="alert">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span>Invalid username or password. Please try again.</span>
+  </div>
+
+  <div id="logoutAlert" class="alert alert-success" style="display:none" role="status">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+    <span>You have been signed out successfully.</span>
+  </div>
+
+  <form action="/login" method="post">
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username"
+             placeholder="Enter your username" required autocomplete="username" autofocus>
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <div class="input-wrapper">
+        <input type="password" id="password" name="password"
+               placeholder="Enter your password" required autocomplete="current-password">
+        <button type="button" class="toggle-pw" aria-label="Toggle password visibility"
+                onclick="togglePassword()">
+          <svg id="eyeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <button type="submit" class="btn-submit">Sign In</button>
+
+  </form>
+
+  <hr class="divider">
+
+  <div class="footer-links">
+    Don't have an account? &nbsp;<a href="/register">Register here</a>
+  </div>
+
+</main>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  if (params.has('error'))  document.getElementById('errorAlert').style.display  = 'flex';
+  if (params.has('logout')) document.getElementById('logoutAlert').style.display = 'flex';
+
+  function togglePassword() {
+    const input   = document.getElementById('password');
+    const icon    = document.getElementById('eyeIcon');
+    const showing = input.type === 'text';
+    input.type    = showing ? 'password' : 'text';
+    icon.innerHTML = showing
+      ? `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`
+      : `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94
+           M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19
+           m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+         <line x1="1" y1="1" x2="23" y2="23"/>`;
+  }
+</script>
+
+</body>
+</html>

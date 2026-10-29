@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register – Course Registration System</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #cbd5e1;
+      --focus-ring: #93c5fd;
+      --error-bg: #fef2f2;
+      --error-text: #991b1b;
+      --error-border: #fecaca;
+      --success-bg: #ecfdf5;
+      --success-text: #065f46;
+      --success-border: #a7f3d0;
+      --radius: 10px;
+      --shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.05);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+                   Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+    }
+
+    .logo {
+      text-align: center;
+      margin-bottom: 1.75rem;
+    }
+
+    .logo-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 52px;
+      height: 52px;
+      background: var(--primary);
+      border-radius: 12px;
+      margin-bottom: 0.85rem;
+    }
+
+    .logo-icon svg {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: #fff;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .logo h1 { font-size: 1.4rem; font-weight: 700; color: var(--text); }
+    .logo p  { font-size: 0.875rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+    .alert {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+      padding: 0.8rem 1rem;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      line-height: 1.45;
+      border: 1px solid transparent;
+      margin-bottom: 1.25rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .alert-error   { background: var(--error-bg);   color: var(--error-text);   border-color: var(--error-border); }
+    .alert-success { background: var(--success-bg); color: var(--success-text); border-color: var(--success-border); }
+    .alert svg { width: 16px; height: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    .form-group { margin-bottom: 1.15rem; }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 0.4rem;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      min-height: 46px;
+      padding: 0.7rem 1rem;
+      font-size: 0.95rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      transition: border-color .15s ease, box-shadow .15s ease;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    select { cursor: pointer; appearance: auto; }
+
+    .input-wrapper { position: relative; }
+
+    .toggle-pw {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      padding: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    .toggle-pw:hover { color: var(--text); }
+    .toggle-pw svg { width: 18px; height: 18px; }
+    input[type="password"] { padding-right: 2.75rem; }
+
+    .btn-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 48px;
+      margin-top: 0.5rem;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s ease, transform .05s ease;
+    }
+
+    .btn-submit:hover    { background: var(--primary-hover); }
+    .btn-submit:active   { transform: scale(0.99); }
+    .btn-submit:disabled { opacity: 0.65; cursor: not-allowed; }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.4);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin .8s linear infinite;
+      margin-right: 0.4rem;
+    }
+
+    .divider { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+
+    .footer-links { text-align: center; font-size: 0.85rem; color: var(--text-muted); }
+    .footer-links a { color: var(--primary); text-decoration: none; font-weight: 500; }
+    .footer-links a:hover { text-decoration: underline; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-4px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin   { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<main class="card">
+
+  <div class="logo">
+    <div class="logo-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+        <circle cx="9" cy="7" r="4"/>
+        <line x1="19" y1="8" x2="19" y2="14"/>
+        <line x1="22" y1="11" x2="16" y2="11"/>
+      </svg>
+    </div>
+    <h1>Create Account</h1>
+    <p>Register to access the Course Portal</p>
+  </div>
+
+  <div id="errorAlert" class="alert alert-error" style="display:none" role="alert">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+      <line x1="12" y1="16" x2="12.01" y2="16"/>
+    </svg>
+    <span id="errorMsg">Registration failed. Please try again.</span>
+  </div>
+
+  <div id="successAlert" class="alert alert-success" style="display:none" role="status">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+    <span>Account created! <a href="/Login">Sign in here</a>.</span>
+  </div>
+
+  <form id="registerForm">
+
+    <div class="form-group">
+      <label for="userId">User ID</label>
+      <input type="text" id="userId" name="id" placeholder="Enter a numeric ID (e.g. 101)"
+             required autocomplete="off" inputmode="numeric" pattern="[0-9]+">
+    </div>
+
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" placeholder="Choose a username"
+             required autocomplete="username" autofocus minlength="3">
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <div class="input-wrapper">
+        <input type="password" id="password" name="password"
+               placeholder="Create a password" required autocomplete="new-password" minlength="6">
+        <button type="button" class="toggle-pw" aria-label="Toggle password visibility"
+                onclick="togglePassword('password','eyeIcon1')">
+          <svg id="eyeIcon1" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="confirmPassword">Confirm Password</label>
+      <div class="input-wrapper">
+        <input type="password" id="confirmPassword" placeholder="Re-enter your password"
+               required autocomplete="new-password" minlength="6">
+        <button type="button" class="toggle-pw" aria-label="Toggle confirm password visibility"
+                onclick="togglePassword('confirmPassword','eyeIcon2')">
+          <svg id="eyeIcon2" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select id="role" name="role" required>
+        <option value="">Select a role</option>
+        <option value="USER">User</option>
+        <option value="ADMIN">Admin</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn-submit" id="submitBtn">Create Account</button>
+
+  </form>
+
+  <hr class="divider">
+
+  <div class="footer-links">
+    Already have an account? &nbsp;<a href="/Login">Sign in</a>
+  </div>
+
+</main>
+
+<script>
+  function togglePassword(inputId, iconId) {
+    const input   = document.getElementById(inputId);
+    const icon    = document.getElementById(iconId);
+    const showing = input.type === 'text';
+    input.type    = showing ? 'password' : 'text';
+    icon.innerHTML = showing
+      ? `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>`
+      : `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94
+           M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19
+           m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+         <line x1="1" y1="1" x2="23" y2="23"/>`;
+  }
+
+  document.getElementById('registerForm').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const errorAlert   = document.getElementById('errorAlert');
+    const successAlert = document.getElementById('successAlert');
+    const errorMsg     = document.getElementById('errorMsg');
+    const submitBtn    = document.getElementById('submitBtn');
+
+    errorAlert.style.display   = 'none';
+    successAlert.style.display = 'none';
+
+    const password        = document.getElementById('password').value;
+    const confirmPassword = document.getElementById('confirmPassword').value;
+
+    if (password !== confirmPassword) {
+      errorMsg.textContent       = 'Passwords do not match.';
+      errorAlert.style.display   = 'flex';
+      return;
+    }
+
+    const payload = {
+      id:       parseInt(document.getElementById('userId').value, 10),
+      username: document.getElementById('username').value.trim(),
+      password: password,
+      role:     document.getElementById('role').value
+    };
+
+    submitBtn.disabled    = true;
+    submitBtn.innerHTML   = '<span class="spinner"></span>Creating...';
+
+    try {
+      const response = await fetch('/register-user', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        successAlert.style.display = 'flex';
+        document.getElementById('registerForm').reset();
+      } else {
+        const text               = await response.text();
+        errorMsg.textContent     = text || 'Registration failed. Please try again.';
+        errorAlert.style.display = 'flex';
+      }
+    } catch (err) {
+      errorMsg.textContent     = 'Network error. Please check your connection.';
+      errorAlert.style.display = 'flex';
+    } finally {
+      submitBtn.disabled  = false;
+      submitBtn.innerHTML = 'Create Account';
+    }
+  });
+</script>
+
+</body>
+</html>

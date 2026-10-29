@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Available Courses - Course Registration System</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --focus-ring: #93c5fd;
+      --badge-bg: #eff6ff;
+      --badge-text: #1d4ed8;
+      --duration-bg: #fef3c7;
+      --duration-text: #92400e;
+      --success-bg: #ecfdf5;
+      --success-text: #065f46;
+      --success-border: #a7f3d0;
+      --error-bg: #fef2f2;
+      --error-text: #991b1b;
+      --error-border: #fecaca;
+      --radius: 10px;
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .nav-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.95rem;
+    }
+
+    .nav-link:hover {
+      text-decoration: underline;
+    }
+
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .header-title h1 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+    }
+
+    .header-title p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* Controls: Search & Stats */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      background: var(--card-bg);
+      padding: 1rem 1.25rem;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      margin-bottom: 1.75rem;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 260px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      min-height: 44px;
+      padding: 0.6rem 1rem 0.6rem 2.4rem;
+      font-size: 0.95rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .search-box input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+
+    .stats-badge {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .stats-badge strong {
+      color: var(--text);
+    }
+
+    /* Alerts */
+    .alert {
+      padding: 0.85rem 1rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      border: 1px solid transparent;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    .alert-success {
+      background-color: var(--success-bg);
+      color: var(--success-text);
+      border-color: var(--success-border);
+    }
+
+    .alert-error {
+      background-color: var(--error-bg);
+      color: var(--error-text);
+      border-color: var(--error-border);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* Course Grid */
+    .courses-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .course-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .course-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    }
+
+    .course-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .course-code-badge {
+      background-color: var(--badge-bg);
+      color: var(--badge-text);
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .course-duration-badge {
+      background-color: var(--duration-bg);
+      color: var(--duration-text);
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .course-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.75rem;
+      line-height: 1.35;
+    }
+
+    .course-instructor {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .course-card-footer {
+      margin-top: auto;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 42px;
+      padding: 0.6rem 1.25rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background-color 0.15s ease;
+      border: 1px solid transparent;
+    }
+
+    .btn-block {
+      width: 100%;
+    }
+
+    .btn-primary {
+      background-color: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background-color: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background-color: #ffffff;
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background-color: #f1f5f9;
+    }
+
+    /* States */
+    .loading-state,
+    .empty-state {
+      grid-column: 1 / -1;
+      background: var(--card-bg);
+      padding: 3rem 1.5rem;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      text-align: center;
+      color: var(--text-muted);
+    }
+
+    .spinner-blue {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(37, 99, 235, 0.2);
+      border-radius: 50%;
+      border-top-color: var(--primary);
+      animation: spin 0.8s linear infinite;
+      vertical-align: middle;
+      margin-right: 0.5rem;
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50%;
+      border-top-color: #ffffff;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Modal */
+    .modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(15, 23, 42, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      z-index: 100;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      width: 100%;
+      max-width: 480px;
+      border-radius: var(--radius);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      padding: 2rem;
+      position: relative;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .modal-header h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--text-muted);
+      line-height: 1;
+    }
+
+    .form-group {
+      margin-bottom: 1.15rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      min-height: 44px;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      outline: none;
+      font-size: 0.95rem;
+    }
+
+    .form-group input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--focus-ring);
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Navigation bar -->
+  <nav class="top-nav">
+    <a href="index.html" class="nav-link">← Back to Portal</a>
+    <a href="enrolled.html" class="nav-link">View Enrolled Students →</a>
+  </nav>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-title">
+      <h1>Available Courses</h1>
+      <p>Browse active courses and register your enrollment</p>
+    </div>
+    <div class="header-actions">
+      <button id="openAddModalBtn" class="btn btn-primary">+ Add New Course</button>
+    </div>
+  </header>
+
+  <!-- Live Alert -->
+  <div id="statusAlert" class="alert hidden" role="alert" aria-live="polite"></div>
+
+  <!-- Search & Stats Bar -->
+  <section class="controls-bar">
+    <div class="search-box">
+      <span class="search-icon">🔍</span>
+      <input type="search" id="searchInput" placeholder="Search by course title, code, or trainer...">
+    </div>
+    <div class="stats-badge">
+      Total Courses: <strong id="courseCount">0</strong>
+    </div>
+  </section>
+
+  <!-- Courses Grid -->
+  <main id="coursesGrid" class="courses-grid" aria-label="Course list">
+    <div class="loading-state">
+      <span class="spinner-blue"></span> Loading available courses...
+    </div>
+  </main>
+</div>
+
+<!-- Add Course Modal -->
+<div id="addCourseModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2 id="modalTitle">Add New Course</h2>
+      <button type="button" id="closeAddModalBtn" class="modal-close-btn" aria-label="Close modal">&times;</button>
+    </div>
+    <form id="addCourseForm">
+      <div class="form-group">
+        <label for="newCourseId">Course Code / ID</label>
+        <input type="text" id="newCourseId" required placeholder="e.g. 20CS015">
+      </div>
+      <div class="form-group">
+        <label for="newCourseName">Course Title</label>
+        <input type="text" id="newCourseName" required placeholder="e.g. CLOUD COMPUTING">
+      </div>
+      <div class="form-group">
+        <label for="newTrainer">Instructor / Trainer</label>
+        <input type="text" id="newTrainer" required placeholder="e.g. Dr. Ramesh">
+      </div>
+      <div class="form-group">
+        <label for="newDuration">Duration (in weeks)</label>
+        <input type="number" id="newDuration" required min="1" max="52" placeholder="e.g. 6">
+      </div>
+      <button type="submit" id="submitAddBtn" class="btn btn-primary btn-block">Add Course</button>
+    </form>
+  </div>
+</div>
+
+<script src="available-courses.js"></script>
+</body>
+</html>
